@@ -1,4 +1,3 @@
-
 name: ReelsPilot Cloud Automation
 
 on:
@@ -11,11 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Start ReelsPilot
-        run: echo "ReelsPilot cloud automation is running!"
+      - name: Check Supabase connection
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          python - <<'PY'
+          import os
+          import urllib.request
+          import urllib.error
 
-      - name: Check current date
-        run: date -u
+          url = os.environ["SUPABASE_URL"].rstrip("/")
+          key = os.environ["SUPABASE_SECRET_KEY"]
 
-      - name: Finish
-        run: echo "Cloud run completed successfully."
+          request = urllib.request.Request(
+              url + "/storage/v1/bucket/reels-queue",
+              headers={"apikey": key}
+          )
+
+          try:
+              response = urllib.request.urlopen(request, timeout=30)
+              print("Supabase connection successful!")
+              print("Bucket reels-queue is accessible.")
+              print("HTTP status:", response.status)
+          except urllib.error.HTTPError as error:
+              print("Supabase returned HTTP:", error.code)
+              raise SystemExit("Connection test failed.")
+          except Exception as error:
+              print("Connection test failed:", type(error).__name__)
+              raise SystemExit(1)
+          PY
