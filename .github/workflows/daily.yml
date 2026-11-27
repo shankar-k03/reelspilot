@@ -1,0 +1,21 @@
+
+name: ReelsPilot Cloud Automation
+
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  cloud-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start ReelsPilot
+        run: echo "ReelsPilot cloud automation is running!"
+
+      - name: Check current date
+        run: date -u
+
+      - name: Finish
+        run: echo "Cloud run completed successfully."
