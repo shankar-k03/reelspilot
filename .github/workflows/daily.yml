@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: reelspilot-daily
@@ -28,29 +28,7 @@ jobs:
           python-version: '3.12'
 
       - name: Start ReelsPilot
-        run: |
-          echo "ReelsPilot cloud automation started"
-          echo "Scheduled daily at 9:00 AM IST"
+        run: echo "Cloud automation started"
 
-      - name: Check cloud connection
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-        run: |
-          python - <<'PY'
-          import os
-          import urllib.request
-
-          url = os.environ["SUPABASE_URL"].rstrip("/")
-          key = os.environ["SUPABASE_SECRET_KEY"]
-
-          req = urllib.request.Request(
-              f"{url}/storage/v1/bucket/reels-queue",
-              headers={"apikey": key}
-          )
-
-          with urllib.request.urlopen(req, timeout=30) as response:
-              print("Cloud storage connected:", response.status)
-
-          print("Automation infrastructure is ready.")
-          PY
+      - name: Run Reel Queue Manager
+        run: python scripts/queue_manager.py
