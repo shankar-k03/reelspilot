@@ -1,3 +1,14 @@
 {
-  "reels": []
+  "reels": [
+    {
+      "id": "reel_001",
+      "video": "reel_001.mp4",
+      "caption": "Your Reel caption goes here #reels",
+      "scheduled_date": "2026-11-28",
+      "status": "pending",
+      "instagram_media_id": null,
+      "published_at": null,
+      "deleted_from_storage": false
+    }
+  ]
 }
