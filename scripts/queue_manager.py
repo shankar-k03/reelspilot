@@ -1,4 +1,4 @@
-
+from reel_validator import validate_reel
 import json
 from datetime import date
 from pathlib import Path
